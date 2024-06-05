@@ -18,10 +18,48 @@ function fetchData() {
     xhr.open("GET", "fetch_data.php", true);
     xhr.onload = function() {
         if (xhr.status == 200) {
-            document.getElementById('data-container').innerHTML = xhr.responseText;
+            console.log("Response Text: ", xhr.responseText); // Logging untuk respons mentah
+            try {
+                var data = JSON.parse(xhr.responseText);
+                if (data.error) {
+                    document.getElementById('data-container').innerHTML = data.error;
+                    return;
+                }
+
+                var content = '';
+                data.forEach(function(item) {
+                    var jarak = item.jarak !== null ? item.jarak : 'Tidak ada data';
+                    var tglData = item.tglData !== null ? item.tglData : 'Tidak ada data';
+                    var persentase = jarak !== 'Tidak ada data' ? calculatePercentage(jarak) : 'N/A';
+
+                    content += "<div class='meja'>";
+                    content += "<div class='data-box'>Jarak: " + jarak + " cm</div>";
+                    content += "<div class='data-box'>Persentase: " + persentase + "%</div>";
+                    content += "<div class='data-box'>Waktu Pengukuran: " + tglData + "</div>";
+                    content += "<button onclick='sendData(" + item.id + ", 1)'>Beri Makan</button>";
+                    content += "</div>";
+                });
+                document.getElementById('data-container').innerHTML = content;
+            } catch (e) {
+                console.error("Error parsing JSON: ", e);
+                document.getElementById('data-container').innerHTML = 'Error parsing data';
+            }
+        } else {
+            console.error("Request failed. Status: " + xhr.status);
+            document.getElementById('data-container').innerHTML = 'Failed to fetch data';
         }
     };
+    xhr.onerror = function() {
+        console.error("Request failed due to a network error.");
+        document.getElementById('data-container').innerHTML = 'Network error';
+    };
     xhr.send();
+}
+
+function calculatePercentage(jarak) {
+    var maxDistance = 13.89; // 13.89 cm adalah 100%
+    var percentage = ((maxDistance - jarak) / maxDistance) * 100;
+    return percentage.toFixed(2); // mengembalikan dua angka di belakang koma
 }
 
 function sendData(id, value) {

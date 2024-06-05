@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'pakan_iwak';
+$username = 'ukzgycqh_root';
+$password = 'aldiganteng123';
+$database = 'ukzgycqh_pakan_iwak';
 
 $koneksi = mysqli_connect($host, $username, $password, $database);
 

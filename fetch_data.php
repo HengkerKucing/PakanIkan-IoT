@@ -1,17 +1,19 @@
 <?php
 $host = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'pakan_iwak';
+$username = 'ukzgycqh_root';
+$password = 'aldiganteng123';
+$database = 'ukzgycqh_pakan_iwak';
 
 $koneksi = mysqli_connect($host, $username, $password, $database);
 
 if (mysqli_connect_errno()) {
-    die("Koneksi database gagal: " . mysqli_connect_error());
+    die(json_encode(['error' => 'Koneksi database gagal: ' . mysqli_connect_error()]));
 }
 
 $query = "SELECT id, binary_value FROM binary_values";
 $result = mysqli_query($koneksi, $query);
+
+$data = [];
 
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -28,19 +30,22 @@ if (mysqli_num_rows($result) > 0) {
         $jarak_result = mysqli_query($koneksi, $jarak_query);
         $jarak_row = mysqli_fetch_assoc($jarak_result);
 
-        $jarak = $jarak_row['jarak'] ?? 'Tidak ada data';
-        $tglData = $jarak_row['tglData'] ?? 'Tidak ada data';
+        $jarak = $jarak_row['jarak'] ?? null;
+        $tglData = $jarak_row['tglData'] ?? null;
 
-        echo "<div class='meja'>";
-        echo "Meja Ke-$id: " . ($binary_value ? '<span style="color: green;">Tersedia</span>' : '<span style="color: red;">Tidak Tersedia</span>') . "<br>";
-        echo "Jarak: " . $jarak . " cm<br>";
-        echo "Waktu Pengukuran: " . $tglData . "<br>";
-        echo "<button onclick='sendData($id, 1)'>Pesanan-$id</button>";
-        echo "</div>";
+        $data[] = [
+            'id' => $id,
+            'binary_value' => $binary_value,
+            'jarak' => $jarak,
+            'tglData' => $tglData
+        ];
     }
 } else {
-    echo "Tidak ada data ditemukan dalam database.";
+    $data['message'] = 'Tidak ada data ditemukan dalam database.';
 }
 
 mysqli_close($koneksi);
+
+header('Content-Type: application/json');
+echo json_encode($data);
 ?>
