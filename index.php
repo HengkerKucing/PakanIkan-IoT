@@ -8,6 +8,8 @@
 </head>
 <body>
 
+<h2>Sistem Pemberian Makan Ikan</h2>
+
 <div class="container" id="data-container">
     <!-- Data akan dimuat di sini melalui AJAX -->
 </div>
@@ -33,10 +35,9 @@ function fetchData() {
                     var persentase = jarak !== 'Tidak ada data' ? calculatePercentage(jarak) : 'N/A';
 
                     content += "<div class='meja'>";
-                    content += "<div class='data-box'>Jarak: " + jarak + " cm</div>";
-                    content += "<div class='data-box'>Persentase: " + persentase + "%</div>";
-                    content += "<div class='data-box'>Waktu Pengukuran: " + tglData + "</div>";
-                    content += "<button onclick='sendData(" + item.id + ", 1)'>Beri Makan</button>";
+                    content += "<div class='data-box'>Persentase Kuota Wadah Pakan: " + persentase + "%</div>";
+                    content += "<div class='data-box'>Waktu Pengukuran Wadah Pakan: " + tglData + "</div>";
+                    content += "<button onclick='sendData(" + item.id + ", 1)'>Beri Makan Ikan</button>";
                     content += "</div>";
                 });
                 document.getElementById('data-container').innerHTML = content;
